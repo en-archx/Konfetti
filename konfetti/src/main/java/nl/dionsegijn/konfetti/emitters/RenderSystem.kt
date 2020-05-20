@@ -27,7 +27,7 @@ class RenderSystem(
 ) {
 
     private val random = Random()
-    private var gravity = Vector(0f, 0.01f)
+    private var gravity = Vector(0f, 0.001f)
     private val particles: MutableList<Confetti> = mutableListOf()
 
     init {
@@ -36,13 +36,14 @@ class RenderSystem(
 
     private fun addConfetti() {
         particles.add(Confetti(
-                location = Vector(location.x, location.y),
-                size = sizes[random.nextInt(sizes.size)],
-                shape = shapes[random.nextInt(shapes.size)],
-                color = colors[random.nextInt(colors.size)],
-                lifespan = config.timeToLive,
-                fadeOut = config.fadeOut,
-                velocity = this.velocity.getVelocity())
+            location = Vector(location.x, location.y),
+            size = sizes[random.nextInt(sizes.size)],
+            shape = shapes[random.nextInt(shapes.size)],
+            color = colors[random.nextInt(colors.size)],
+            lifespan = config.timeToLive,
+            fadeOut = config.fadeOut,
+            rotateRandomly = config.rotateRandomly,
+            velocity = this.velocity.getVelocity())
         )
     }
 

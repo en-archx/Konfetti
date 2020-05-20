@@ -3,6 +3,7 @@ package nl.dionsegijn.konfetti
 import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.util.Log
 import nl.dionsegijn.konfetti.models.Shape
 import nl.dionsegijn.konfetti.models.Size
 import nl.dionsegijn.konfetti.models.Vector
@@ -16,6 +17,7 @@ class Confetti(
     val shape: Shape,
     var lifespan: Long = -1L,
     val fadeOut: Boolean = true,
+    val rotateRandomly: Boolean = true,
     private var acceleration: Vector = Vector(0f, 0f),
     var velocity: Vector = Vector()
 ) {
@@ -46,7 +48,7 @@ class Confetti(
 
     fun applyForce(force: Vector) {
         val f = force.copy()
-        f.div(mass)
+        f.mult(mass)
         acceleration.add(f)
     }
 
@@ -58,6 +60,7 @@ class Confetti(
     private fun update(deltaTime: Float) {
         velocity.add(acceleration)
 
+        val prevLocation = location.copy()
         val v = velocity.copy()
         v.mult(deltaTime * speedF)
         location.add(v)
@@ -65,12 +68,15 @@ class Confetti(
         if (lifespan <= 0) updateAlpha(deltaTime)
         else lifespan -= (deltaTime * 1000).toLong()
 
-        val rSpeed = (rotationSpeed * deltaTime) * speedF
-        rotation += rSpeed
-        if (rotation >= 360) rotation = 0f
-
-        rotationWidth -= rSpeed
-        if (rotationWidth < 0) rotationWidth = width
+        if (rotateRandomly) {
+            val rSpeed = (rotationSpeed * deltaTime) * speedF
+            rotation += rSpeed
+            if (rotation >= 360) rotation = 0f
+            rotationWidth -= rSpeed
+            if (rotationWidth < 0) rotationWidth = width
+        } else {
+            rotation = prevLocation.angle(location) + 90
+        }
     }
 
     private fun updateAlpha(deltaTime: Float) {

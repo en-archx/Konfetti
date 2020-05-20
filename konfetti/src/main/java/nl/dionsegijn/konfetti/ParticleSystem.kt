@@ -155,6 +155,11 @@ class ParticleSystem(private val konfettiView: KonfettiView) {
         return this
     }
 
+    fun setRotateRandomly(rotateRandomly: Boolean): ParticleSystem {
+        confettiConfig.rotateRandomly = rotateRandomly
+        return this
+    }
+
     /**
      * Burst will create and shoot all confetti at once
      * Calling this function will start the system rendering the confetti
